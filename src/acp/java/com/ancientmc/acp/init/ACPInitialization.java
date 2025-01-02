@@ -75,7 +75,7 @@ public class ACPInitialization {
                 .setIndex(Json.getAssetIndexUrl(project.file(Paths.JSON)))
                 .setOutput(project.file(Paths.DIR_RUN))
                 .setMessage("Downloading assets");
-        downloadAssets.exec(logger, !project.file(Paths.DIR_RUN + "resources\\").exists());
+        downloadAssets.exec(logger, !project.file(Paths.DIR_RUN + "resources/").exists());
 
         Step downloadJar = new DownloadJarStep()
                 .setInput(Json.getJarUrl(downloadJson.getOutput(), "client"))

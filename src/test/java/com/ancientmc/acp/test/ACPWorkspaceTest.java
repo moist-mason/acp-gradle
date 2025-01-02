@@ -35,8 +35,8 @@ public class ACPWorkspaceTest {
      */
     @BeforeEach
     public void setup() throws IOException {
-        testDir = new File("acp_test\\");
-        testData = new File("test_data\\main\\");
+        testDir = new File("acp_test/");
+        testData = new File("test_data/main/");
 
         // Each template, including the build file, gets copied over to the test workspace directory.
         Collection<File> files = FileUtils.listFiles(testData, TrueFileFilter.INSTANCE, DirectoryFileFilter.DIRECTORY);
@@ -45,8 +45,8 @@ public class ACPWorkspaceTest {
             FileUtils.copyFile(file, new File(testDir, newPath));
         }
 
-        // Generate the src/main/resources path. This prevents an File not found error in the test build.gradle.
-        FileUtils.forceMkdir(new File(testDir, "src\\main\\resources"));
+        // Generate the src/main/resources path. This prevents a File not found error in the test build.gradle.
+        FileUtils.forceMkdir(new File(testDir, "src/main/resources"));
     }
 
     /** Cleans the workspace. **/
@@ -108,7 +108,7 @@ public class ACPWorkspaceTest {
      * @throws IOException
      */
     public void injectRubyTestMod() throws IOException {
-        File ruby = new File("test_data\\ruby\\");
+        File ruby = new File("test_data/ruby/");
         Collection<File> files = FileUtils.listFiles(ruby, TrueFileFilter.INSTANCE, DirectoryFileFilter.DIRECTORY);
 
         for (File file : files) {

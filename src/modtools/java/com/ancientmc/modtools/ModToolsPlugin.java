@@ -86,7 +86,7 @@ public class ModToolsPlugin implements Plugin<Project> {
         extractReobfClasses.configure(task -> {
             task.setGroup("modtools");
             task.dependsOn(reobfJar);
-            task.from(project.zipTree(project.file(Paths.REOBF_JAR))).include("*.class", "net\\");
+            task.from(project.zipTree(project.file(Paths.REOBF_JAR))).include("*.class", "net/");
             task.into(Paths.DIR_REOBF_CLASSES);
         });
 
@@ -94,7 +94,7 @@ public class ModToolsPlugin implements Plugin<Project> {
             task.setGroup("modtools");
             task.dependsOn(extractReobfClasses);
             task.getClassesDirectory().set(project.file(Paths.DIR_MODDED_CLASSES));
-            task.getOutput().set(new File("build\\modding\\hashes\\modded.md5"));
+            task.getOutput().set(new File("build/modding/hashes/modded.md5"));
         });
 
         makeZip.configure(task -> {
@@ -102,10 +102,10 @@ public class ModToolsPlugin implements Plugin<Project> {
             task.setGroup("modtools");
             task.dependsOn(makeModdedHashes);
             task.getObfuscatedClassDirectory().set(project.file(Paths.DIR_REOBF_CLASSES));
-            task.getOriginalHash().set(project.file("build\\modding\\hashes\\original.md5"));
-            task.getModdedHash().set(project.file("build\\modding\\hashes\\modded.md5"));
+            task.getOriginalHash().set(project.file("build/modding/hashes/original.md5"));
+            task.getModdedHash().set(project.file("build/modding/hashes/modded.md5"));
             task.getSrg().set(project.file(Paths.SRG));
-            task.getZip().set(project.file("build\\modding\\zip\\" + name + ".zip"));
+            task.getZip().set(project.file("build/modding/zip/" + name + ".zip"));
         });
     }
 }

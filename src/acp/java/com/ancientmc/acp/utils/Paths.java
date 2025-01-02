@@ -39,20 +39,20 @@ public class Paths {
      *                files use the version in their names.
      */
     public static void init(String version) {
-        DIR_CFG = "cfg\\";
-        DIR_MAPPINGS = DIR_CFG + "mappings\\";
-        DIR_LOGS = DIR_CFG + "logs\\";
-        DIR_TEMP = DIR_CFG + "temp\\";
-        DIR_PATCHES = DIR_CFG + "patches\\";
-        DIR_MODPATCHES = DIR_CFG + "modpatches\\";
-        DIR_RUN = "run\\";
-        DIR_NATIVES = DIR_RUN + "bin\\natives\\";
-        DIR_SRC = "src\\main\\java\\";
-        DIR_ORIGINAL_SRC = "build\\modding\\originalSrc";
-        DIR_RESOURCES = "src\\main\\resources\\";
-        DIR_ORIGINAL_CLASSES = "build\\modding\\classes\\original\\";
-        DIR_MODDED_CLASSES = "build\\classes\\java\\main\\";
-        DIR_REOBF_CLASSES = "build\\modding\\classes\\reobf\\";
+        DIR_CFG = "cfg/";
+        DIR_MAPPINGS = DIR_CFG + "mappings/";
+        DIR_LOGS = DIR_CFG + "logs/";
+        DIR_TEMP = DIR_CFG + "temp/";
+        DIR_PATCHES = DIR_CFG + "patches/";
+        DIR_MODPATCHES = DIR_CFG + "modpatches/";
+        DIR_RUN = "run/";
+        DIR_NATIVES = DIR_RUN + "bin/natives/";
+        DIR_SRC = "src/main/java/";
+        DIR_ORIGINAL_SRC = "build/modding/originalSrc";
+        DIR_RESOURCES = "src/main/resources/";
+        DIR_ORIGINAL_CLASSES = "build/modding/classes/original/";
+        DIR_MODDED_CLASSES = "build/classes/java/main/";
+        DIR_REOBF_CLASSES = "build/modding/classes/reobf/";
         ACP_DATA = DIR_CFG + "data.zip";
         VERSION_MANIFEST = DIR_TEMP + "version_manifest.json";
         JSON = DIR_TEMP + version + ".json";
@@ -63,9 +63,9 @@ public class Paths {
         SRG_JAR = DIR_TEMP + version + "-srg.jar";
         INJECT_JAR = DIR_TEMP + version + "-inj.jar";
         FINAL_JAR = DIR_TEMP + version + "-final.jar";
-        INTERM_JAR = "build\\libs\\interm-" + version + ".jar";
-        REOBF_JAR = "build\\libs\\minecraft-" + version + ".jar";
+        INTERM_JAR = "build/libs/interm-" + version + ".jar";
+        REOBF_JAR = "build/libs/minecraft-" + version + ".jar";
         SRG = DIR_MAPPINGS + version + ".tsrg";
-        REOBF_SRG = "build\\modding\\reobf.srg";
+        REOBF_SRG = "build/modding/reobf.srg";
     }
 }

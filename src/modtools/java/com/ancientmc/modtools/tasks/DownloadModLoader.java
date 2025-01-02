@@ -34,7 +34,7 @@ public abstract class DownloadModLoader extends DefaultTask {
             if (!output.exists()) {
                 FileUtils.forceMkdir(output);
             }
-            FileUtils.copyURLToFile(url, getProject().file(output.getPath() + "\\modloader.lzma"));
+            FileUtils.copyURLToFile(url, getProject().file(output.getPath() + "/modloader.lzma"));
         } catch (IOException e) {
             e.printStackTrace();
         }

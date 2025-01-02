@@ -66,7 +66,7 @@ public class DownloadAssetsStep extends Step {
             assets.put(name, hash);
         });
 
-        downloadAssets(assets, new File(output, "resources\\"));
+        downloadAssets(assets, new File(output, "resources/"));
     }
 
     /**

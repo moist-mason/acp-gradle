@@ -28,11 +28,11 @@ public abstract class RepackageDefaults extends DefaultTask {
                     String name = file.getName();
 
                     // Creates a temp file that we will add the package header to.
-                    File temp = getProject().file(out.getPath() + "\\temp-" + name);
+                    File temp = getProject().file(out.getPath() + "/temp-" + name);
                     writeFile(file, temp, "package net.minecraft.src;\n\n");
 
                     // Moves the temp file to the endpoint path in net/minecraft/src, and then delete the temp file.
-                    File newFile = getProject().file(out.getPath() + "\\net\\minecraft\\src\\" + name);
+                    File newFile = getProject().file(out.getPath() + "/net/minecraft/src/" + name);
                     writeFile(temp, newFile, "");
                 }
             }
@@ -42,7 +42,7 @@ public abstract class RepackageDefaults extends DefaultTask {
     }
 
     /**
-     * Simple method to write a new file based on an old file (which gets deleted), with the ability to addadditional text at the beginning.
+     * Simple method to write a new file based on an old file (which gets deleted), with the ability to add additional text at the beginning.
      * @param in The input file.
      * @param out The output file.
      * @param toAdd The text getting added.

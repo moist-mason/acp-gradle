@@ -4,7 +4,7 @@ buildscript {
         maven { url = 'https://maven.minecraftforge.net' }
     }
     dependencies {
-        classpath files('plugins\\acp.jar')
+        classpath files('plugins/acp.jar')
         classpath 'commons-io:commons-io:2.11.0'
         classpath 'com.google.code.gson:gson:2.10.1'
         classpath 'net.minecraftforge:srgutils:0.4.13'
@@ -46,7 +46,7 @@ acp {
 
 modtools {
     loader = 'risugami'
-    diffPatchesDir = project.buildDir.absolutePath + '\\modding\\patches\\diff'
+    diffPatchesDir = project.buildDir.absolutePath + '/modding/patches/diff'
     modName = 'mod'
 }
 
@@ -70,10 +70,10 @@ compileJava {
 
 jar {
     archiveBaseName = 'interm'
-    exclude ('acp\\')
+    exclude ('acp/')
     from(zipTree(file(Paths.EXTRA_JAR))) {
-        include('com\\')
-        include('paulscode\\')
+        include('com/')
+        include('paulscode/')
     }
 }
 

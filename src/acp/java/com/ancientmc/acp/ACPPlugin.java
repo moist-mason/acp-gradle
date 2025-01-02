@@ -129,7 +129,7 @@ public class ACPPlugin implements Plugin<Project> {
             task.getMainClass().set("codechicken.diffpatch.DiffPatch");
             task.setClasspath(project.files(diffpatch));
             task.args("--patch", Paths.DIR_SRC, Paths.DIR_PATCHES, "--output", Paths.DIR_SRC,
-                    "--reject", Paths.DIR_TEMP + "patch_rejects\\");
+                    "--reject", Paths.DIR_TEMP + "patch_rejects/");
             task.getLogging().captureStandardOutput(LogLevel.DEBUG);
         });
 
@@ -153,7 +153,7 @@ public class ACPPlugin implements Plugin<Project> {
         copySrc.configure(task -> {
            task.setGroup("decomp");
            task.dependsOn(copyJarAssets);
-           task.from(project.file(Paths.DIR_SRC)).exclude("acp\\");
+           task.from(project.file(Paths.DIR_SRC)).exclude("acp/");
            task.into(project.file(Paths.DIR_ORIGINAL_SRC));
         });
 
@@ -164,7 +164,7 @@ public class ACPPlugin implements Plugin<Project> {
             task.setClasspath(project.getExtensions().getByType(SourceSetContainer.class).getByName("main").getCompileClasspath());
             task.getDestinationDirectory().set(new File(Paths.DIR_ORIGINAL_CLASSES));
             task.getOptions().setCompilerArgs(Arrays.asList("-g:none", "-source", "1.6", "-target", "1.6"));
-            task.exclude("acp\\");
+            task.exclude("acp/");
             task.getLogging().captureStandardOutput(LogLevel.DEBUG);
         });
 
@@ -172,7 +172,7 @@ public class ACPPlugin implements Plugin<Project> {
             task.setGroup("decomp");
             task.dependsOn(testCompile);
             task.getClassesDirectory().set(project.file(Paths.DIR_ORIGINAL_CLASSES));
-            task.getOutput().set(project.file("build\\modding\\hashes\\original.md5"));
+            task.getOutput().set(project.file("build/modding/hashes/original.md5"));
         });
     }
 }

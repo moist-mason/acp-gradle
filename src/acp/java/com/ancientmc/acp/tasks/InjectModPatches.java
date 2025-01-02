@@ -56,7 +56,7 @@ public abstract class InjectModPatches extends DefaultTask {
                 action.args("--clean", currIn.getAbsolutePath(), "--apply", lzma.getAbsolutePath(), "--output", currOut.getAbsolutePath(), "--unpatched");
             });
         });
-        FileUtils.deleteDirectory(project.file(Paths.DIR_TEMP + "modjars\\"));
+        FileUtils.deleteDirectory(project.file(Paths.DIR_TEMP + "modjars/"));
     }
 
     public List<File> getFiles(File directory) {
@@ -75,7 +75,7 @@ public abstract class InjectModPatches extends DefaultTask {
      * @return The current input for injection.
      */
     public File getCurrentInput(File input, List<File> files, File lzma) {
-        File temp = getProject().file(Paths.DIR_TEMP + "modjars\\temp" + files.indexOf(lzma) + ".jar");
+        File temp = getProject().file(Paths.DIR_TEMP + "modjars/temp" + files.indexOf(lzma) + ".jar");
         return files.indexOf(lzma) == 0 ? input : temp;
     }
 
@@ -89,7 +89,7 @@ public abstract class InjectModPatches extends DefaultTask {
      * @return The current output after injection.
      */
     public File getCurrentOutput(File output, List<File> files, File lzma) {
-        File temp = getProject().file(Paths.DIR_TEMP + "modjars\\temp" + (files.indexOf(lzma) + 1) + ".jar");
+        File temp = getProject().file(Paths.DIR_TEMP + "modjars/temp" + (files.indexOf(lzma) + 1) + ".jar");
         return files.indexOf(lzma) == files.size() - 1 ? output : temp;
     }
 
