@@ -5,8 +5,10 @@ import com.ancientmc.acp.tasks.MakeHashes;
 import com.ancientmc.acp.tasks.InjectModPatches;
 import com.ancientmc.acp.tasks.RepackageDefaults;
 import com.ancientmc.acp.utils.Paths;
+import com.ancientmc.logger.Logger;
 import org.gradle.api.*;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.Copy;
@@ -17,6 +19,7 @@ import org.gradle.api.tasks.compile.JavaCompile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 public class ACPPlugin implements Plugin<Project> {
@@ -25,6 +28,21 @@ public class ACPPlugin implements Plugin<Project> {
     public void apply(Project project) {
         String minecraftVersion = project.getExtensions().getExtraProperties().get("MC_VERSION").toString();
         ACPExtension extension = project.getExtensions().create("acp", ACPExtension.class, project);
+
+        // ACP Initialization Logger
+        File initLogFile = new File(project.getProjectDir(), "logs/acp_init.log");
+        Logger initLog = new Logger(initLogFile);
+        if (!initLogFile.exists()) {
+            try {
+                Files.createDirectory(initLogFile.getParentFile().toPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            initLog.clear(initLogFile);
+        }
+
+        initLogs(project, initLog, "acp.init", minecraftVersion);
 
         // Set the Minecraft version for the various directory/file paths to utilize.
         Paths.init(minecraftVersion);
@@ -174,5 +192,20 @@ public class ACPPlugin implements Plugin<Project> {
             task.getClassesDirectory().set(project.file(Paths.DIR_ORIGINAL_CLASSES));
             task.getOutput().set(project.file("build/modding/hashes/original.md5"));
         });
+    }
+
+    public void initLogs(Project project, Logger initLog, String component, String minecraftVersion) {
+        initLog.log(component, "Ancient Coder Pack Initialization Log");
+        initLog.log(component, "ACP Version: " + project.getVersion());
+        initLog.log(component, "ACP Gradle Version: " + getAcpGradleVersion(project));
+        initLog.log(component, "OS: " + System.getProperty("os.name"));
+        initLog.log(component, "Minecraft Version:" + minecraftVersion);
+    }
+
+    private static String getAcpGradleVersion(Project project) {
+        Configuration configuration = project.getBuildscript().getConfigurations().getByName("classpath");
+        Dependency acpGradle = configuration.getDependencies().stream().filter(d -> d.getName().contains("acp"))
+                .findAny().orElse(null);
+        return (acpGradle == null ? "TEST" : acpGradle.getVersion());
     }
 }
