@@ -1,12 +1,14 @@
 package com.ancientmc.acp.utils;
 
-import com.ancientmc.acp.ACPExtension;
+import com.ancientmc.logger.ACPLogger;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraftforge.srgutils.IMappingFile;
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
-import org.gradle.api.logging.Logger;
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.Dependency;
 import org.gradle.internal.os.OperatingSystem;
 
 import java.io.*;
@@ -109,5 +111,29 @@ public class Utils {
 
     public static String getAncientMCMaven() {
         return "https://github.com/ancientmc/ancientmc-maven/raw/maven/";
+    }
+
+    public static File getLogFile(Project project, String name) {
+        try {
+            File file = new File(project.getProjectDir().getPath() + "/" + Paths.DIR_LOGS, name);
+            FileUtils.createParentDirectories(file);
+            return file;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void bootLog(ACPLogger logger, String component, Project project, String minecraftVersion) {
+        logger.log(component, "ACP Version: " + project.getVersion());
+        logger.log(component, "ACP Gradle Version: " + getAcpGradleVersion(project));
+        logger.log(component, "OS: " + System.getProperty("os.name"));
+        logger.log(component, "Minecraft Version: " + minecraftVersion);
+    }
+
+    private static String getAcpGradleVersion(Project project) {
+        Configuration configuration = project.getBuildscript().getConfigurations().getByName("classpath");
+        Dependency acpGradle = configuration.getDependencies().stream().filter(d -> d.getName().contains("acp"))
+                .findAny().orElse(null);
+        return (acpGradle == null ? "TEST" : acpGradle.getVersion());
     }
 }

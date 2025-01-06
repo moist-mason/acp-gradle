@@ -2,6 +2,7 @@ package com.ancientmc.acp.init.step;
 
 import com.ancientmc.acp.utils.Json;
 import com.ancientmc.acp.utils.Utils;
+import com.ancientmc.logger.ACPLogger;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.logging.Logger;
@@ -23,7 +24,7 @@ public class DownloadAssetsStep extends Step {
      */
     private URL index;
     /**
-     * The output file containing the resources. Specifically, this is the "run" directory in the ACP workspace.
+     * The output directory containing the resources. Specifically, this is the "run" directory in the ACP workspace.
      */
     private File output;
 
@@ -31,20 +32,26 @@ public class DownloadAssetsStep extends Step {
      * Since asset downloading is more complicated, this method merely downloads the asset index file from the URL.
      * @param logger The gradle logger.
      * @param condition Boolean condition that determines if the step gets executed.
+     * @param acpLogger The ACP logger.
      */
     @Override
-    public void exec(Logger logger, boolean condition) {
-        super.exec(logger, condition);
+    public void exec(Logger logger, boolean condition, ACPLogger acpLogger) {
+        super.exec(logger, condition, acpLogger);
         if (condition) {
+            acpLogger.log("acp.init", "Asset index URL: " + index.toString());
+            acpLogger.log("acp.init", "Output directory: " + output.getAbsolutePath());
+
             try {
-                if (!output.exists()) FileUtils.forceMkdir(output);
+                if (!output.exists()) {
+                    FileUtils.forceMkdir(output);
+                }
                 String path = index.getPath().substring(index.getPath().lastIndexOf('/') + 1);
                 File file = new File(output, path);
                 if (!file.exists()) {
                     FileUtils.copyURLToFile(index, file);
                 }
 
-                getAssets(file, output);
+                getAssets(acpLogger, file, output);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -57,7 +64,7 @@ public class DownloadAssetsStep extends Step {
      * @param output The "run" directory in the ACP workspace.
      * @throws IOException
      */
-    public static void getAssets(File index, File output) throws IOException {
+    public static void getAssets(ACPLogger logger, File index, File output) throws IOException {
         JsonObject indexObj = Utils.getJsonAsObject(index);
         Map<String, String> assets = new HashMap<>();
         JsonObject objects = indexObj.getAsJsonObject("objects");
@@ -66,7 +73,7 @@ public class DownloadAssetsStep extends Step {
             assets.put(name, hash);
         });
 
-        downloadAssets(assets, new File(output, "resources/"));
+        downloadAssets(logger, assets, new File(output, "resources/"));
     }
 
     /**
@@ -76,8 +83,11 @@ public class DownloadAssetsStep extends Step {
      * @param dest The "run\resources" directory path in the ACP workspace.
      * @throws IOException
      */
-    public static void downloadAssets(Map<String, String> map, File dest) throws IOException {
-        if(!dest.exists()) FileUtils.forceMkdir(dest);
+    public static void downloadAssets(ACPLogger acpLogger, Map<String, String> map, File dest) throws IOException {
+        if(!dest.exists()) {
+            FileUtils.forceMkdir(dest);
+        }
+
         map.forEach((key, value) -> {
             try {
                 String path = value.substring(0, 2) + '/' + value;
@@ -86,6 +96,8 @@ public class DownloadAssetsStep extends Step {
                 if(!file.getParentFile().exists()) {
                     FileUtils.forceMkdir(file.getParentFile());
                 }
+
+                acpLogger.log("acp.init", "Downloading " + file.getName() + " from URL " + url);
                 writeToFile(new URL(url).openStream(), new FileOutputStream(file));
             } catch (IOException e) {
                 e.printStackTrace();

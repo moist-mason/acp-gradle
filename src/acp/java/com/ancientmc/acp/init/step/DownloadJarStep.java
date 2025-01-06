@@ -1,6 +1,7 @@
 package com.ancientmc.acp.init.step;
 
 import com.ancientmc.acp.utils.Json;
+import com.ancientmc.logger.ACPLogger;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.logging.Logger;
 
@@ -21,18 +22,25 @@ public class DownloadJarStep extends DownloadFileStep {
      * This method parses through the JSON file to find the jar URL. The URL is retrieved via a method in the Json utilities class.
      * @param logger The gradle logger.
      * @param condition Boolean condition that determines if the step gets executed.
+     * @param acpLogger The ACP logger.
      * @see Json#getJarUrl(File, String)
      */
     @Override
-    public void exec(Logger logger, boolean condition) {
+    public void exec(Logger logger, boolean condition, ACPLogger acpLogger) {
         printMessage(logger, message, condition);
         if (condition) {
             try {
                 File jar = new File(output, version + (input.getPath().contains("client") ? ".jar" : "-server.jar"));
+                acpLogger.log("acp.init", "Input URL: " + input);
+                acpLogger.log("acp.init", "Output File: " + jar.getAbsolutePath());
                 FileUtils.copyURLToFile(input, jar);
+                acpLogger.log("acp.init", "Download successful");
             } catch (IOException e) {
+                acpLogger.log("acp.init.step", "WARNING: Download of file at " + input.toString() + " went wrong!");
                 e.printStackTrace();
             }
+        } else {
+            acpLogger.log("acp.init", "File already exists. Skipping step");
         }
     }
 

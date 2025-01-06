@@ -41,7 +41,7 @@ public class Paths {
     public static void init(String version) {
         DIR_CFG = "cfg/";
         DIR_MAPPINGS = DIR_CFG + "mappings/";
-        DIR_LOGS = DIR_CFG + "logs/";
+        DIR_LOGS = "logs/";
         DIR_TEMP = DIR_CFG + "temp/";
         DIR_PATCHES = DIR_CFG + "patches/";
         DIR_MODPATCHES = DIR_CFG + "modpatches/";

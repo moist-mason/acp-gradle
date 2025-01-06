@@ -1,7 +1,9 @@
 package com.ancientmc.acp.init.step;
 
 import com.ancientmc.acp.utils.Json;
+import com.ancientmc.logger.ACPLogger;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.DependencyResolutionListener;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.ResolvableDependencies;
@@ -28,13 +30,20 @@ public class DownloadLibrariesStep extends Step {
      * @see Json#getLibraries(List)
      */
     @Override
-    public void exec() {
+    public void exec(ACPLogger acpLogger) {
         DependencySet dependencies = project.getConfigurations().getByName("implementation").getDependencies();
 
         project.getGradle().addListener(new DependencyResolutionListener() {
             @Override
             public void beforeResolve(ResolvableDependencies resolvableDependencies) {
-                libraries.forEach(lib -> dependencies.add(project.getDependencies().create(lib)));
+                libraries.forEach(lib -> {
+                    if (dependencies.stream().noneMatch(d -> d.getName().equals(lib))) {
+                        acpLogger.log("acp.init", "Downloading " + lib + " as Gradle dependency for Minecraft");
+                        dependencies.add(project.getDependencies().create(lib));
+                    } else {
+                        acpLogger.log("acp.init", "Dependency already registered. Skipping");
+                    }
+                });
                 project.getGradle().removeListener(this);
             }
 

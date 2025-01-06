@@ -1,5 +1,6 @@
 package com.ancientmc.acp.init.step;
 
+import com.ancientmc.logger.ACPLogger;
 import org.gradle.api.NonNullApi;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -20,24 +21,29 @@ public class DownloadToolsStep extends Step {
     private File properties;
 
     @Override
-    public void exec() {
+    public void exec(ACPLogger acpLogger) {
         try {
             List<String> lines = Files.readAllLines(properties.toPath());
             Map<String, String> map = getConfigMap(lines);
             map.forEach((name, tool) -> {
                 Configuration cfg = project.getConfigurations().getByName(name);
-                resolve(cfg, tool);
+                resolve(acpLogger, cfg, tool);
             });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void resolve(Configuration cfg, String tool) {
+    public void resolve(ACPLogger acpLogger, Configuration cfg, String tool) {
         project.getGradle().addListener(new DependencyResolutionListener() {
             @Override
             public void beforeResolve(ResolvableDependencies resolvableDependencies) {
-                cfg.getDependencies().add(project.getDependencies().create(tool));
+                if (cfg.getDependencies().stream().noneMatch(d -> d.getName().equals(tool))) {
+                    acpLogger.log("acp.init", "Downloading " + tool + "as Gradle dependency for ACP");
+                    cfg.getDependencies().add(project.getDependencies().create(tool));
+                } else {
+                    acpLogger.log("acp.init", "Dependency already registered. Skipping");
+                }
                 project.getGradle().removeListener(this);
             }
 

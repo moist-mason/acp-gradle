@@ -1,5 +1,6 @@
 package com.ancientmc.acp.init.step;
 
+import com.ancientmc.logger.ACPLogger;
 import org.gradle.api.logging.Logger;
 
 import java.io.File;
@@ -29,21 +30,23 @@ public class Step {
     }
 
     /**
-     * Variation of the exec(logger, condition) method for if we want to skip the logging process and conditions.
+     * Variation of the exec(logger, condition, acpLogger) method for if we want to skip the logging process and conditions.
      * Used during dependency (library) resolution, as that occurs in its own little realm separate from the rest
      * of the initialization stuff.
      */
-    public void exec() {
-        exec(null, true);
+    public void exec(ACPLogger acpLogger) {
+        exec(null, true, acpLogger);
     }
 
     /**
      * Main execution method for all inheritors of the Step class.
      * @param logger The gradle logger.
      * @param condition Boolean condition that determines if the step gets executed.
+     * @param acpLogger The ACP logger.
      */
-    public void exec(Logger logger, boolean condition) {
+    public void exec(Logger logger, boolean condition, ACPLogger acpLogger) {
         printMessage(logger, message, condition);
+        acpLogger.log("acp.init", "STEP: " + message);
     }
 
     /**

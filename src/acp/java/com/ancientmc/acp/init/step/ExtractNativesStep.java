@@ -1,6 +1,7 @@
 package com.ancientmc.acp.init.step;
 
 import com.ancientmc.acp.utils.Json;
+import com.ancientmc.logger.ACPLogger;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
@@ -34,12 +35,14 @@ public class ExtractNativesStep extends Step {
      * from their JAR files into the output folder.
      * @param logger The gradle logger.
      * @param condition Boolean condition that determines if the step gets executed.
+     * @param acpLogger The ACP logger.
      */
     @Override
-    public void exec(Logger logger, boolean condition) {
-        super.exec(logger, condition);
+    public void exec(Logger logger, boolean condition, ACPLogger acpLogger) {
+        super.exec(logger, condition, acpLogger);
         if (condition) {
             try {
+                acpLogger.log("acp.init", "Output Directory: " + output.getAbsolutePath());
                 List<File> jars = new ArrayList<>();
                 for(URL url : urls) {
                     String path = url.getPath().substring(url.getPath().lastIndexOf('/') + 1);
@@ -48,6 +51,7 @@ public class ExtractNativesStep extends Step {
                 }
 
                 jars.forEach(jar -> {
+                    acpLogger.log("acp.init", "Extracting native archive " + jar.getName() + " into " + output.getAbsolutePath());
                     project.copy(action -> {
                         action.from(project.zipTree(jar));
                         action.into(project.file(output));

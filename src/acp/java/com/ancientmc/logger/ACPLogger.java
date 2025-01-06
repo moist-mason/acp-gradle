@@ -3,18 +3,16 @@ package com.ancientmc.logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
-public class Logger {
+public class ACPLogger {
     private final File logFile;
 
     /**
      * Logger with no log file. Log file path is null.
      */
-    public Logger() {
+    public ACPLogger() {
         this(null);
     }
 
@@ -22,7 +20,7 @@ public class Logger {
      * Logger with a log file.
      * @param logFile The log file.
      */
-    public Logger(File logFile) {
+    public ACPLogger(File logFile) {
         this.logFile = logFile;
     }
 
@@ -44,7 +42,7 @@ public class Logger {
     }
 
     public void clear(File logFile) {
-        try (FileWriter writer = new FileWriter(logFile)) {
+        try (FileWriter writer = new FileWriter(logFile, true)) {
             writer.write("");
             writer.flush();
         } catch (IOException e) {
