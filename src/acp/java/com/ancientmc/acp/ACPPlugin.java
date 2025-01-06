@@ -35,7 +35,7 @@ public class ACPPlugin implements Plugin<Project> {
         TaskProvider<InjectModPatches> injectModPatches = project.getTasks().register("injectModPatches", InjectModPatches.class);
         TaskProvider<JavaExec> mcinject = project.getTasks().register("mcinject", JavaExec.class);
         TaskProvider<JavaExec> deobfJar = project.getTasks().register("deobfJar", JavaExec.class);
-        TaskProvider<JavaExec> decompile = project.getTasks().register("decompile", JavaExec.class);
+        TaskProvider<JavaExec> decompileJar = project.getTasks().register("decompileJar", JavaExec.class);
         TaskProvider<Copy> unzip = project.getTasks().register("unzip", Copy.class);
         TaskProvider<JavaExec> patch = project.getTasks().register("patch", JavaExec.class);
         TaskProvider<RepackageDefaults> repackageDefaults = project.getTasks().register("repackageDefaults", RepackageDefaults.class);
@@ -61,7 +61,7 @@ public class ACPPlugin implements Plugin<Project> {
         });
 
         stripJar.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.setDescription("Strips the JAR into two, one JAR containing the core Minecraft classes, and the other containing everything else.");
             task.getMainClass().set("net.minecraftforge.jarsplitter.ConsoleTool");
             task.setClasspath(project.files(jarsplitter));
@@ -72,7 +72,7 @@ public class ACPPlugin implements Plugin<Project> {
         File modPatches = project.file(Paths.DIR_MODPATCHES);
 
         injectModPatches.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.dependsOn(stripJar);
             task.getInputJar().set(project.file(Paths.SLIM_JAR));
             task.getPatchDir().set(modPatches);
@@ -85,7 +85,7 @@ public class ACPPlugin implements Plugin<Project> {
         String dependent = (vanilla ? "stripJar" : "injectModPatches");
 
         mcinject.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.setDescription("Injects the slim JAR with local variables, exceptions, and other stuff to eliminate errors.");
             task.dependsOn(project.getTasks().getByName(dependent));
             task.getMainClass().set("de.oceanlabs.mcp.mcinjector.MCInjector");
@@ -95,7 +95,7 @@ public class ACPPlugin implements Plugin<Project> {
         });
 
         deobfJar.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.setDescription("Deobfuscates the JAR with human-readable names.");
             task.dependsOn(mcinject);
             task.getMainClass().set("net.minecraftforge.fart.Main");
@@ -104,8 +104,8 @@ public class ACPPlugin implements Plugin<Project> {
             task.getLogging().captureStandardOutput(LogLevel.DEBUG);
         });
 
-        decompile.configure(task -> {
-            task.setGroup("decomp");
+        decompileJar.configure(task -> {
+            task.setGroup("decompile");
             task.setDescription("Decompiles the JAR.");
             task.dependsOn(deobfJar);
             task.getMainClass().set("org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler");
@@ -115,15 +115,15 @@ public class ACPPlugin implements Plugin<Project> {
         });
 
         unzip.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.setDescription("Unzips the java source files into the src directory.");
-            task.dependsOn(decompile);
+            task.dependsOn(decompileJar);
             task.from(project.zipTree(project.file(Paths.FINAL_JAR)));
             task.into(project.file(Paths.DIR_SRC));
         });
 
         patch.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.setDescription("Patches the source files to make the game able to compile.");
             task.dependsOn(unzip);
             task.getMainClass().set("codechicken.diffpatch.DiffPatch");
@@ -134,7 +134,7 @@ public class ACPPlugin implements Plugin<Project> {
         });
 
         repackageDefaults.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.setDescription("Repackages any default source files into the net/minecraft/src directory.");
             task.dependsOn(patch);
             task.getSourceDirIn().set(project.file(Paths.DIR_SRC));
@@ -142,7 +142,7 @@ public class ACPPlugin implements Plugin<Project> {
         });
 
         copyJarAssets.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.setDescription("Copies the JAR assets into the src/main/resources folder.");
             task.dependsOn(repackageDefaults);
             task.from(project.zipTree(project.file(Paths.EXTRA_JAR)));
@@ -151,14 +151,14 @@ public class ACPPlugin implements Plugin<Project> {
         });
 
         copySrc.configure(task -> {
-           task.setGroup("decomp");
+           task.setGroup("decompile");
            task.dependsOn(copyJarAssets);
            task.from(project.file(Paths.DIR_SRC)).exclude("acp/");
            task.into(project.file(Paths.DIR_ORIGINAL_SRC));
         });
 
         testCompile.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.dependsOn(copySrc);
             task.setSource(project.file(Paths.DIR_SRC));
             task.setClasspath(project.getExtensions().getByType(SourceSetContainer.class).getByName("main").getCompileClasspath());
@@ -169,7 +169,7 @@ public class ACPPlugin implements Plugin<Project> {
         });
 
         makeOriginalHashes.configure(task -> {
-            task.setGroup("decomp");
+            task.setGroup("decompile");
             task.dependsOn(testCompile);
             task.getClassesDirectory().set(project.file(Paths.DIR_ORIGINAL_CLASSES));
             task.getOutput().set(project.file("build/modding/hashes/original.md5"));
