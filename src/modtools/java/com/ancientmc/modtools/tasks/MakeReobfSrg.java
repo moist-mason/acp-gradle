@@ -1,7 +1,7 @@
 package com.ancientmc.modtools.tasks;
 
 import com.ancientmc.acp.utils.Paths;
-import net.minecraftforge.srgutils.IMappingFile;
+import net.neoforged.srgutils.IMappingFile;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.RegularFileProperty;

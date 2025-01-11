@@ -63,7 +63,7 @@ public class ACPPlugin implements Plugin<Project> {
         stripJar.configure(task -> {
             task.setGroup("decompile");
             task.setDescription("Strips the JAR into two, one JAR containing the core Minecraft classes, and the other containing everything else.");
-            task.getMainClass().set("net.minecraftforge.jarsplitter.ConsoleTool");
+            task.getMainClass().set("net.neoforged.jarsplitter.ConsoleTool");
             task.setClasspath(project.files(jarsplitter));
             task.args("--input", Paths.BASE_JAR, "--slim", Paths.SLIM_JAR, "--extra", Paths.EXTRA_JAR, "--srg", Paths.SRG);
             task.getLogging().captureStandardOutput(LogLevel.DEBUG);
@@ -98,7 +98,7 @@ public class ACPPlugin implements Plugin<Project> {
             task.setGroup("decompile");
             task.setDescription("Deobfuscates the JAR with human-readable names.");
             task.dependsOn(mcinject);
-            task.getMainClass().set("net.minecraftforge.fart.Main");
+            task.getMainClass().set("net.neoforged.art.Main");
             task.setClasspath(project.files(forgeart));
             task.args("--input", Paths.INJECT_JAR, "--output", Paths.SRG_JAR, "--map", Paths.SRG, "--src-fix", "--strip-sigs");
             task.getLogging().captureStandardOutput(LogLevel.DEBUG);

@@ -1,13 +1,13 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://maven.neoforged.net' }
     }
     dependencies {
         classpath files('plugins/acp.jar')
-        classpath 'commons-io:commons-io:2.11.0'
-        classpath 'com.google.code.gson:gson:2.10.1'
-        classpath 'net.minecraftforge:srgutils:0.4.13'
+        classpath 'com.google.code.gson:gson:2.11.0'
+        classpath 'commons-io:commons-io:2.18.0'
+        classpath 'net.neoforged:srgutils:1.0.9'
     }
 }
 
@@ -27,7 +27,7 @@ targetCompatibility = '1.6'
 
 repositories {
     maven { url = 'https://libraries.minecraft.net' }
-    maven { url = 'https://maven.minecraftforge.net/' }
+    maven { url = 'https://maven.neoforged.net/' }
     maven { url = 'https://github.com/ancientmc/ancientmc-maven/raw/maven/' }
 }
 
@@ -54,7 +54,7 @@ tasks.withType(JavaExec) {
     systemProperty 'java.library.path', Paths.DIR_NATIVES
 }
 
-task setup() {
+task decompile() {
     dependsOn(':makeOriginalHashes')
 }
 

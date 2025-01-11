@@ -1,12 +1,9 @@
 package com.ancientmc.acp.utils;
 
-import com.ancientmc.acp.ACPExtension;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraftforge.srgutils.IMappingFile;
-import org.gradle.api.Project;
-import org.gradle.api.logging.Logger;
+import net.neoforged.srgutils.IMappingFile;
 import org.gradle.internal.os.OperatingSystem;
 
 import java.io.*;
@@ -73,8 +70,9 @@ public class Utils {
      * @param zip The output ZIP.
      * @throws IOException
      */
-    public static void compress(Collection<File> files, File zip) throws IOException {
+    public static void compressZip(Collection<File> files, File zip) throws IOException {
         ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zip));
+
         for(File file : files) {
             zipOut.putNextEntry(new ZipEntry(file.getName()));
             FileInputStream in = new FileInputStream(file);

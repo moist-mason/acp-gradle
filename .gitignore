@@ -41,8 +41,5 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### Gradle properties file ###
-gradle.properties
-
 ### Generated ACP test folder ###
 acp_test/

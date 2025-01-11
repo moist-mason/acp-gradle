@@ -43,7 +43,7 @@ public abstract class MakeZip extends DefaultTask {
                 }
             });
 
-            Utils.compress(moddedClasses, zip);
+            Utils.compressZip(moddedClasses, zip);
         } catch (IOException e) {
             e.printStackTrace();
         }

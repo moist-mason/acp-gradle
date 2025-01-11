@@ -22,7 +22,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url = 'https://maven.minecraftforge.net/'} // switch to NeoForge eventually. Not worrying about it right now.
+    maven { url = 'https://maven.neoforged.net/'}
 }
 
 apply plugin: 'io.github.moist-mason.license-importer'
@@ -45,9 +45,9 @@ configurations {
 
 dependencies {
     acpImplementation gradleApi()
-    acpImplementation 'commons-io:commons-io:2.18.0'
     acpImplementation 'com.google.code.gson:gson:2.11.0'
-    acpImplementation 'net.minecraftforge:srgutils:0.4.13'
+    acpImplementation 'commons-io:commons-io:2.18.0'
+    acpImplementation 'net.neoforged:srgutils:1.0.9'
 
     modtoolsImplementation sourceSets.acp.output
 
@@ -122,7 +122,7 @@ publishing {
     repositories {
         maven {
             name = 'ancientmc-maven'
-            url = 'D:/Desktop/Programs/Projects/AncientMC/ancientmc-maven/'
+            url = '../ancientmc-maven/'
         }
     }
 }

@@ -53,15 +53,15 @@ public class ACPWorkspaceTest {
     @Test public void testClean() { doTest("clean"); }
 
     /** Sets up a vanilla ACP workspace. The "modpatches" folder must be deleted before this can be run.**/
-    @Test public void testSetup() { doTest("clean", "setup"); }
+    @Test public void testDecompile() { doTest("clean", "decompile"); }
 
     /** Sets up an ACP workspace with the modloader injected, but with no additional mods installed. **/
-    @Test public void testSetupModdedClean() { doTest("clean", "downloadModLoader", "setup"); }
+    @Test public void testDecompileModdedClean() { doTest("clean", "downloadModLoader", "decompile"); }
 
     /** Sets up an ACP workspace with the modloader injected, as well as the test ruby mod copied to the source path. **/
-    @Test public void testSetupModdedRuby() { doTestModded("clean", "downloadModLoader", "setup"); }
+    @Test public void testDecompileModdedRuby() { doTestModded("clean", "downloadModLoader", "decompile"); }
 
-    /** Runs the game. **/
+    /** Runs the game. Must be done after one of the three decompiled tests. **/
     @Test public void testRunClient() { doTest("runClient"); }
 
     /** Generates DiffPatches. **/
