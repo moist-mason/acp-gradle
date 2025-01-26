@@ -4,7 +4,7 @@ import com.ancientmc.acp.init.ACPInitialization;
 import com.ancientmc.acp.tasks.MakeHashes;
 import com.ancientmc.acp.tasks.InjectModPatches;
 import com.ancientmc.acp.tasks.RepackageDefaults;
-import com.ancientmc.acp.utils.Paths;
+import com.ancientmc.acp.util.Paths;
 import org.gradle.api.*;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.logging.LogLevel;
@@ -19,12 +19,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class ACPPlugin implements Plugin<Project> {
+public class AcpPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
         String minecraftVersion = project.getExtensions().getExtraProperties().get("MC_VERSION").toString();
-        ACPExtension extension = project.getExtensions().create("acp", ACPExtension.class, project);
+        AcpExtension extension = project.getExtensions().create("acp", AcpExtension.class, project);
 
         // Set the Minecraft version for the various directory/file paths to utilize.
         Paths.init(minecraftVersion);
@@ -49,8 +49,6 @@ public class ACPPlugin implements Plugin<Project> {
         Configuration forgeart = project.getConfigurations().create("forgeart");
         Configuration fernflower = project.getConfigurations().create("fernflower");
         Configuration diffpatch = project.getConfigurations().create("diffpatch");
-        Configuration specialsource = project.getConfigurations().create("specialsource");
-        Configuration binpatcher = project.getConfigurations().create("binpatcher");
 
         project.afterEvaluate(proj -> {
             try {

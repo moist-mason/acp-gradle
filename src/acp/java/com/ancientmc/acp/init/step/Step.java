@@ -56,6 +56,11 @@ public class Step {
         return output;
     }
 
+    /**
+     * Sets the message printed to the console.
+     * @param message The message printed to the console.
+     * @return This step.
+     */
     public Step setMessage(String message) {
         this.message = message;
         return this;

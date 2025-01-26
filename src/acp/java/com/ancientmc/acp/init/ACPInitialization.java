@@ -1,10 +1,10 @@
 package com.ancientmc.acp.init;
 
-import com.ancientmc.acp.ACPExtension;
+import com.ancientmc.acp.AcpExtension;
 import com.ancientmc.acp.init.step.*;
-import com.ancientmc.acp.utils.Json;
-import com.ancientmc.acp.utils.Paths;
-import com.ancientmc.acp.utils.Utils;
+import com.ancientmc.acp.util.Json;
+import com.ancientmc.acp.util.Paths;
+import com.ancientmc.acp.util.Util;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
 
@@ -24,13 +24,13 @@ public class ACPInitialization {
      * @param version The Minecraft version, specified in the ACP end-user workspace.
      * @throws IOException
      */
-    public static void init(Project project, ACPExtension extension, String version) throws IOException {
-        String maven = Utils.getAncientMCMaven();
+    public static void init(Project project, AcpExtension extension, String version) throws IOException {
+        String maven = Util.getAncientMCMaven();
         String data = extension.getData().get();
         Logger logger = project.getLogger();
 
         Step downloadACPData = new DownloadFileStep()
-                .setInput(Utils.toMavenUrl(maven, data, "zip"))
+                .setInput(Util.toMavenUrl(maven, data, "zip"))
                 .setOutput(project.file(Paths.ACP_DATA))
                 .setMessage("Downloading ACP data");
         downloadACPData.exec(logger, !downloadACPData.getOutput().exists());

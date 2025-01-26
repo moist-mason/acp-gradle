@@ -1,6 +1,6 @@
 package com.ancientmc.modtools.tasks;
 
-import com.ancientmc.acp.utils.Utils;
+import com.ancientmc.acp.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
@@ -27,7 +27,7 @@ public abstract class DownloadModLoader extends DefaultTask {
             String loader = getModLoader().get();
             File output = getOutputDir().get().getAsFile();
 
-            String repo = Utils.getAncientMCMaven();
+            String repo = Util.getAncientMCMaven();
 
             URL url = getURL(repo, version, loader);
 
@@ -52,7 +52,7 @@ public abstract class DownloadModLoader extends DefaultTask {
         String ml = getModLoaderPath(loader);
 
         String mavenPath = ml + ":" + version;
-        return Utils.toMavenUrl(repo, mavenPath, "lzma");
+        return Util.toMavenUrl(repo, mavenPath, "lzma");
     }
 
     /**

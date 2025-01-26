@@ -1,6 +1,6 @@
 package com.ancientmc.acp.tasks;
 
-import com.ancientmc.acp.utils.Paths;
+import com.ancientmc.acp.util.Paths;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Injects LZMA files found within a specified directory into the Minecraft JAR.
  * Binary injection is done via Minecraft Forge's Binary Patcher. Multiple LZMA files can be injected, as this task
- * makes temporary JAR files.
+ * makes temporary JAR files for each implemented LZMA.
  */
 public abstract class InjectModPatches extends DefaultTask {
 

@@ -15,10 +15,20 @@ import java.util.List;
 import java.util.Map;
 
 public class DownloadToolsStep extends Step {
+    /**
+     * The gradle project.
+     */
     private Project project;
 
+    /**
+     * The gradle properties file, which contains a list of tools ACP uses to deobfuscate and decompile Minecraft.
+     */
     private File properties;
 
+    /**
+     * Execution method. The properties file is read line-by-line and converted to a hash-map. That map is then used to resolve each tool dependency
+     * into its corresponding configuration.
+     */
     @Override
     public void exec() {
         try {
@@ -33,6 +43,11 @@ public class DownloadToolsStep extends Step {
         }
     }
 
+    /**
+     * Resolves (adds) the dependency of the given tool configuration.
+     * @param cfg The tool configuration.
+     * @param tool The name of the tool dependency.
+     */
     public void resolve(Configuration cfg, String tool) {
         project.getGradle().addListener(new DependencyResolutionListener() {
             @Override

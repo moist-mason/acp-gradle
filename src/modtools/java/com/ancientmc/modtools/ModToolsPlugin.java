@@ -1,7 +1,7 @@
 package com.ancientmc.modtools;
 
 import com.ancientmc.acp.tasks.MakeHashes;
-import com.ancientmc.acp.utils.Paths;
+import com.ancientmc.acp.util.Paths;
 import com.ancientmc.modtools.tasks.DownloadModLoader;
 import com.ancientmc.modtools.tasks.MakeReobfSrg;
 import com.ancientmc.modtools.tasks.MakeZip;
@@ -35,8 +35,8 @@ public class ModToolsPlugin implements Plugin<Project> {
         TaskProvider<Copy> extractReobfClasses = project.getTasks().register("extractReobfClasses", Copy.class);
         TaskProvider<MakeZip> makeZip = project.getTasks().register("makeZip", MakeZip.class);
 
-        Configuration diffpatch = project.getConfigurations().getByName("diffpatch");
-        Configuration specialsource = project.getConfigurations().getByName("specialsource");
+        Configuration diffpatch = project.getConfigurations().create("diffpatch");
+        Configuration specialsource = project.getConfigurations().create("specialsource");
 
         project.afterEvaluate(proj -> {
             String diffPatches = extension.getDiffPatchesDir().get();

@@ -31,7 +31,7 @@ public abstract class RepackageDefaults extends DefaultTask {
                     File temp = getProject().file(out.getPath() + "/temp-" + name);
                     writeFile(file, temp, "package net.minecraft.src;\n\n");
 
-                    // Moves the temp file to the endpoint path in net/minecraft/src, and then delete the temp file.
+                    // Moves the temp file to the endpoint path in net/minecraft/src, and then deletes the temp file.
                     File newFile = getProject().file(out.getPath() + "/net/minecraft/src/" + name);
                     writeFile(temp, newFile, "");
                 }

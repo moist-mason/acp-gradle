@@ -1,4 +1,4 @@
-package com.ancientmc.acp.utils;
+package com.ancientmc.acp.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,7 +18,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * Class full of miscellaneous utilities.
  */
-public class Utils {
+public class Util {
 
     /**
      * Useful utility method for easily converting a JSON file into a JSON object parsable by GSON.
@@ -26,7 +26,7 @@ public class Utils {
      * @return The JSON file as a GSON object.
      * @throws IOException
      */
-    public static JsonObject getJsonAsObject(File json) throws IOException {
+    public static JsonObject getJson(File json) throws IOException {
         Reader reader = Files.newBufferedReader(json.toPath());
         JsonElement element = JsonParser.parseReader(reader);
         return element.getAsJsonObject();

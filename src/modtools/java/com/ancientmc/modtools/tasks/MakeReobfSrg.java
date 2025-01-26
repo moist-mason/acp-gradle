@@ -1,6 +1,6 @@
 package com.ancientmc.modtools.tasks;
 
-import com.ancientmc.acp.utils.Paths;
+import com.ancientmc.acp.util.Paths;
 import net.neoforged.srgutils.IMappingFile;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;

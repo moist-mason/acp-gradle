@@ -1,6 +1,6 @@
 package com.ancientmc.acp.init.step;
 
-import com.ancientmc.acp.utils.Json;
+import com.ancientmc.acp.util.Json;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.logging.Logger;
 

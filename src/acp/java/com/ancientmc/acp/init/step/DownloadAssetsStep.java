@@ -1,7 +1,6 @@
 package com.ancientmc.acp.init.step;
 
-import com.ancientmc.acp.utils.Json;
-import com.ancientmc.acp.utils.Utils;
+import com.ancientmc.acp.util.Json;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.logging.Logger;
@@ -58,7 +57,7 @@ public class DownloadAssetsStep extends Step {
      * @throws IOException
      */
     public static void getAssets(File index, File output) throws IOException {
-        JsonObject indexObj = Utils.getJsonAsObject(index);
+        JsonObject indexObj = Json.get(index);
         Map<String, String> assets = new HashMap<>();
         JsonObject objects = indexObj.getAsJsonObject("objects");
         objects.keySet().forEach(name -> {

@@ -61,7 +61,7 @@ gradlePlugin {
             id = 'com.ancientmc.acp'
             displayName = 'acp-plugin'
             description = 'Gradle plugin for Ancient Coder Pack (ACP) processes.'
-            implementationClass = 'com.ancientmc.acp.ACPPlugin'
+            implementationClass = 'com.ancientmc.acp.AcpPlugin'
         }
         modtools {
             id = 'com.ancientmc.modtools'

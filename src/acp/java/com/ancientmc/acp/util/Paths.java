@@ -1,4 +1,4 @@
-package com.ancientmc.acp.utils;
+package com.ancientmc.acp.util;
 
 /**
  * File containing all paths used by ACP.

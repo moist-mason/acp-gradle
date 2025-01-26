@@ -1,12 +1,12 @@
-package com.ancientmc.acp.utils;
+package com.ancientmc.acp.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.gradle.internal.os.OperatingSystem;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,17 @@ public class Json {
     private static final String LWJGL_MAC_VERSION = "2.9.1";
 
     /**
+     * Useful utility method for easily converting a JSON file into a JSON object parsable by Gson.
+     * @param file The JSON file.
+     * @return The JSON file as a Gson object.
+     * @throws IOException
+     */
+    public static JsonObject get(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        return JsonParser.parseReader(reader).getAsJsonObject();
+    }
+
+    /**
      * Gets the JSON URL for the specified version from the version manifest file.
      * @param manifest The version manifest JSON.
      * @param version The Minecraft version, specified in the ACP end-user workspace.
@@ -26,7 +37,7 @@ public class Json {
      */
     public static URL getJsonUrl(File manifest, String version) {
         try {
-            JsonObject manifestObj = Utils.getJsonAsObject(manifest);
+            JsonObject manifestObj = get(manifest);
             JsonArray versions = manifestObj.getAsJsonArray("versions");
 
             for (int i = 0; i < versions.size(); i++) {
@@ -53,7 +64,7 @@ public class Json {
         List<String> libList = new ArrayList<>();
 
         for(File json : jsons) {
-            JsonObject object = Utils.getJsonAsObject(json);
+            JsonObject object = get(json);
             JsonArray libraries = object.getAsJsonArray("libraries");
 
             for(int i = 0; i < libraries.size(); i++) {
@@ -74,7 +85,7 @@ public class Json {
      * @throws IOException
      */
     public static List<URL> getNativeUrls(File json) throws IOException {
-        JsonObject jsonObj = Utils.getJsonAsObject(json);
+        JsonObject jsonObj = get(json);
         JsonArray libraries = jsonObj.getAsJsonArray("libraries");
         List<URL> urls = new ArrayList<>();
 
@@ -82,7 +93,7 @@ public class Json {
             String name = libraries.get(i).getAsJsonObject().get("name").getAsString();
             JsonObject entry = libraries.get(i).getAsJsonObject().getAsJsonObject("downloads");
             if(entry.has("classifiers")) {
-                String os = Utils.getOSName();
+                String os = Util.getOSName();
                 JsonObject natives = entry.getAsJsonObject("classifiers").getAsJsonObject("natives-" + os);
                 if (natives != null && isAllowed(name)) {
                     URL url = new URL(natives.get("url").getAsString());
@@ -101,7 +112,7 @@ public class Json {
      * @throws IOException
      */
     public static URL getAssetIndexUrl(File json) throws IOException {
-        JsonObject jsonObj = Utils.getJsonAsObject(json);
+        JsonObject jsonObj = get(json);
         return new URL(jsonObj.getAsJsonObject("assetIndex").get("url").getAsString());
     }
 
@@ -114,7 +125,7 @@ public class Json {
      * @throws IOException
      */
     public static URL getJarUrl(File json, String side) throws IOException {
-        JsonObject jsonObj = Utils.getJsonAsObject(json);
+        JsonObject jsonObj = get(json);
         JsonObject sideObj = jsonObj.getAsJsonObject("downloads").getAsJsonObject(side);
         return new URL(sideObj.get("url").getAsString());
     }

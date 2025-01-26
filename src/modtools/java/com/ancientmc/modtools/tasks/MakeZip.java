@@ -1,6 +1,6 @@
 package com.ancientmc.modtools.tasks;
 
-import com.ancientmc.acp.utils.Utils;
+import com.ancientmc.acp.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
@@ -26,7 +26,7 @@ public abstract class MakeZip extends DefaultTask {
             // Retrieve hash maps.
             Map<String, String> originalMap = getHashMap(originalHash);
             Map<String, String> moddedMap = getHashMap(moddedHash);
-            Map<String, String> classMap = Utils.getClassMap(srg);
+            Map<String, String> classMap = Util.getClassMap(srg);
 
             // Remove ACP start class from map.
             moddedMap.remove("acp/client/Start");
@@ -43,7 +43,7 @@ public abstract class MakeZip extends DefaultTask {
                 }
             });
 
-            Utils.compressZip(moddedClasses, zip);
+            Util.compressZip(moddedClasses, zip);
         } catch (IOException e) {
             e.printStackTrace();
         }

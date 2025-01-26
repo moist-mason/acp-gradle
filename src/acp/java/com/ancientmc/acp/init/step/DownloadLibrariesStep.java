@@ -1,11 +1,10 @@
 package com.ancientmc.acp.init.step;
 
-import com.ancientmc.acp.utils.Json;
+import com.ancientmc.acp.util.Json;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.DependencyResolutionListener;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.ResolvableDependencies;
-import org.gradle.api.logging.Logger;
 
 import java.util.List;
 
