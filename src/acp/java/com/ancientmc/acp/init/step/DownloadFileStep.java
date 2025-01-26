@@ -28,6 +28,7 @@ public class DownloadFileStep extends Step {
     @Override
     public void exec(Logger logger, boolean condition) {
         super.exec(logger, condition);
+
         if (condition) {
             try {
                 FileUtils.copyURLToFile(input, output);

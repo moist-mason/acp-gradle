@@ -40,15 +40,17 @@ public class Json {
             JsonObject manifestObj = get(manifest);
             JsonArray versions = manifestObj.getAsJsonArray("versions");
 
-            for (int i = 0; i < versions.size(); i++) {
-                JsonElement id = versions.get(i).getAsJsonObject().get("id");
-                if(id.getAsString().equals(version)) {
-                    return new URL(versions.get(i).getAsJsonObject().get("url").getAsString());
+            for (JsonElement entry : versions.asList()) {
+                JsonElement id = entry.getAsJsonObject().get("id");
+
+                if (id.getAsString().equals(version)) {
+                    return new URL(entry.getAsJsonObject().get("url").getAsString());
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -63,18 +65,19 @@ public class Json {
     public static List<String> getLibraries(List<File> jsons) throws IOException {
         List<String> libList = new ArrayList<>();
 
-        for(File json : jsons) {
+        for (File json : jsons) {
             JsonObject object = get(json);
             JsonArray libraries = object.getAsJsonArray("libraries");
 
-            for(int i = 0; i < libraries.size(); i++) {
-                JsonObject entry = libraries.get(i).getAsJsonObject();
-                String name = entry.getAsJsonPrimitive("name").getAsString();
-                if(!name.startsWith("net.minecraft:launchwrapper") && isAllowed(name)) {
+            for (JsonElement entry : libraries.asList()) {
+                String name = entry.getAsJsonObject().getAsJsonPrimitive("name").getAsString();
+
+                if (!name.startsWith("net.minecraft:launchwrapper") && isAllowed(name)) {
                     libList.add(name);
                 }
             }
         }
+
         return libList;
     }
 
@@ -89,18 +92,21 @@ public class Json {
         JsonArray libraries = jsonObj.getAsJsonArray("libraries");
         List<URL> urls = new ArrayList<>();
 
-        for (int i = 0; i < libraries.size(); i++) {
-            String name = libraries.get(i).getAsJsonObject().get("name").getAsString();
-            JsonObject entry = libraries.get(i).getAsJsonObject().getAsJsonObject("downloads");
-            if(entry.has("classifiers")) {
+        for (JsonElement entry : libraries.asList()) {
+            String name = entry.getAsJsonObject().get("name").getAsString();
+            JsonObject downloads = entry.getAsJsonObject().getAsJsonObject("downloads");
+
+            if (downloads.has("classifiers")) {
                 String os = Util.getOSName();
-                JsonObject natives = entry.getAsJsonObject("classifiers").getAsJsonObject("natives-" + os);
+                JsonObject natives = downloads.getAsJsonObject("classifiers").getAsJsonObject("natives-" + os);
+
                 if (natives != null && isAllowed(name)) {
                     URL url = new URL(natives.get("url").getAsString());
                     urls.add(url);
                 }
             }
         }
+
         return urls;
     }
 
@@ -127,6 +133,7 @@ public class Json {
     public static URL getJarUrl(File json, String side) throws IOException {
         JsonObject jsonObj = get(json);
         JsonObject sideObj = jsonObj.getAsJsonObject("downloads").getAsJsonObject(side);
+
         return new URL(sideObj.get("url").getAsString());
     }
 
@@ -138,6 +145,7 @@ public class Json {
         if (!name.contains("org.lwjgl")) {
             return true;
         }
+
         return (OperatingSystem.current().isMacOsX()) ? name.contains(LWJGL_MAC_VERSION) : name.contains(LWJGL_VERSION);
     }
 }

@@ -21,18 +21,6 @@ import java.util.zip.ZipOutputStream;
 public class Util {
 
     /**
-     * Useful utility method for easily converting a JSON file into a JSON object parsable by GSON.
-     * @param json The JSON file.
-     * @return The JSON file as a GSON object.
-     * @throws IOException
-     */
-    public static JsonObject getJson(File json) throws IOException {
-        Reader reader = Files.newBufferedReader(json.toPath());
-        JsonElement element = JsonParser.parseReader(reader);
-        return element.getAsJsonObject();
-    }
-
-    /**
      * Gets a map of class names from the SRG file. The key is the obfuscated name, while the value is the mapped name.
      * @param srg The SRG file.
      * @return The class map.
@@ -73,7 +61,7 @@ public class Util {
     public static void compressZip(Collection<File> files, File zip) throws IOException {
         ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zip));
 
-        for(File file : files) {
+        for (File file : files) {
             zipOut.putNextEntry(new ZipEntry(file.getName()));
             FileInputStream in = new FileInputStream(file);
             int len;

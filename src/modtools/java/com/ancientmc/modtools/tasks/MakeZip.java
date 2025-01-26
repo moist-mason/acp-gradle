@@ -30,8 +30,8 @@ public abstract class MakeZip extends DefaultTask {
 
             // Remove ACP start class from map.
             moddedMap.remove("acp/client/Start");
-
             List<File> moddedClasses = new ArrayList<>();
+
             moddedMap.forEach((name, hash) -> {
                 if (!originalMap.containsValue(hash)) {
                     // Get the class file names without packages.

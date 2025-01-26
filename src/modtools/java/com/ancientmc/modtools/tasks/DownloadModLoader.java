@@ -26,9 +26,7 @@ public abstract class DownloadModLoader extends DefaultTask {
             String version = getVersion().get();
             String loader = getModLoader().get();
             File output = getOutputDir().get().getAsFile();
-
             String repo = Util.getAncientMCMaven();
-
             URL url = getURL(repo, version, loader);
 
             if (!output.exists()) {
@@ -50,8 +48,8 @@ public abstract class DownloadModLoader extends DefaultTask {
      */
     private URL getURL(String repo, String version, String loader) throws MalformedURLException {
         String ml = getModLoaderPath(loader);
-
         String mavenPath = ml + ":" + version;
+
         return Util.toMavenUrl(repo, mavenPath, "lzma");
     }
 

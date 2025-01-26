@@ -26,6 +26,7 @@ public class DownloadJarStep extends DownloadFileStep {
     @Override
     public void exec(Logger logger, boolean condition) {
         printMessage(logger, message, condition);
+
         if (condition) {
             try {
                 File jar = new File(output, version + (input.getPath().contains("client") ? ".jar" : "-server.jar"));

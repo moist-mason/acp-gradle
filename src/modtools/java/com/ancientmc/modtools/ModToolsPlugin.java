@@ -51,7 +51,6 @@ public class ModToolsPlugin implements Plugin<Project> {
 
         downloadModLoader.configure(task -> {
             String loaderType = extension.getLoader().get();
-
             task.setGroup("modtools");
             task.getVersion().set(minecraftVersion);
             task.getOutputDir().set(project.file(Paths.DIR_MODPATCHES));

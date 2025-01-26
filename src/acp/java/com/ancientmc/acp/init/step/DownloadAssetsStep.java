@@ -34,11 +34,17 @@ public class DownloadAssetsStep extends Step {
     @Override
     public void exec(Logger logger, boolean condition) {
         super.exec(logger, condition);
+
         if (condition) {
             try {
-                if (!output.exists()) FileUtils.forceMkdir(output);
+
+                if (!output.exists()) {
+                    FileUtils.forceMkdir(output);
+                }
+
                 String path = index.getPath().substring(index.getPath().lastIndexOf('/') + 1);
                 File file = new File(output, path);
+
                 if (!file.exists()) {
                     FileUtils.copyURLToFile(index, file);
                 }
@@ -60,11 +66,11 @@ public class DownloadAssetsStep extends Step {
         JsonObject indexObj = Json.get(index);
         Map<String, String> assets = new HashMap<>();
         JsonObject objects = indexObj.getAsJsonObject("objects");
+
         objects.keySet().forEach(name -> {
             String hash = objects.getAsJsonObject(name).get("hash").getAsString();
             assets.put(name, hash);
         });
-
         downloadAssets(assets, new File(output, "resources/"));
     }
 
@@ -76,7 +82,10 @@ public class DownloadAssetsStep extends Step {
      * @throws IOException
      */
     public static void downloadAssets(Map<String, String> map, File dest) throws IOException {
-        if(!dest.exists()) FileUtils.forceMkdir(dest);
+        if(!dest.exists()) {
+            FileUtils.forceMkdir(dest);
+        }
+
         map.forEach((key, value) -> {
             try {
                 String path = value.substring(0, 2) + '/' + value;
@@ -101,6 +110,7 @@ public class DownloadAssetsStep extends Step {
     public static void writeToFile(InputStream in, OutputStream out) throws IOException {
         byte[] b = new byte[1024];
         int len;
+
         while ((len = in.read(b)) > 0) {
             out.write(b, 0, len);
             out.flush();
