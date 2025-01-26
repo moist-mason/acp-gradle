@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * Initialization class for events that occur upon launching ACP for the first time, or upon a gradle refresh if needed.
  */
-public class ACPInitialization {
+public class AcpInitializer {
 
     /**
      * Initialization method.

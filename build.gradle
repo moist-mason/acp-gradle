@@ -92,6 +92,7 @@ task testJar(type: Copy, dependsOn: jar) {
 test {
     dependsOn(':testJar')
     useJUnitPlatform()
+    filter { includeTestsMatching "*testDecompileAll" }
 }
 
 publishing {

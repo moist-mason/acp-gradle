@@ -47,6 +47,7 @@ public abstract class MakeHashes extends DefaultTask {
     public static void run(File directory, File out) throws IOException {
         Map<String, String> map = new HashMap<>();
         Collection<File> classes = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, DirectoryFileFilter.DIRECTORY);
+
         classes.forEach(cls -> {
             String hash = getHash(cls);
             String name = cls.getAbsolutePath();

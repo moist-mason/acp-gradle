@@ -19,7 +19,7 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS;
 import static org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ACPWorkspaceTest {
+public class AcpWorkspaceTest {
     /**
      * The generated directory for our test workspace.
      */
@@ -49,32 +49,28 @@ public class ACPWorkspaceTest {
         FileUtils.forceMkdir(new File(testDir, "src/main/resources"));
     }
 
-    /** Cleans the workspace. **/
-    @Test public void testClean() { doTest("clean"); }
+    /** Runs all tests. **/
+    @Test public void testDecompileAll() {
+        testDecompile();
+        testDecompileModdedClean();
+        testDecompileModdedRuby();
+    }
 
     /** Sets up a vanilla ACP workspace. The "modpatches" folder must be deleted before this can be run.**/
-    @Test public void testDecompile() { doTest("clean", "decompile"); }
+    @Test public void testDecompile() { doTest("decompile", "clean", "decompile", "runClient"); }
 
     /** Sets up an ACP workspace with the modloader injected, but with no additional mods installed. **/
-    @Test public void testDecompileModdedClean() { doTest("clean", "downloadModLoader", "decompile"); }
+    @Test public void testDecompileModdedClean() { doTest("decompileModded", "clean", "downloadModLoader", "decompile", "runClient"); }
 
     /** Sets up an ACP workspace with the modloader injected, as well as the test ruby mod copied to the source path. **/
-    @Test public void testDecompileModdedRuby() { doTestModded("clean", "downloadModLoader", "decompile"); }
-
-    /** Runs the game. Must be done after one of the three decompiled tests. **/
-    @Test public void testRunClient() { doTest("runClient"); }
-
-    /** Generates DiffPatches. **/
-    @Test public void testGeneratePatches() { doTestModded("makeDiffPatches"); }
-
-    /** Makes the ZIP containing modified class files. **/
-    @Test public void testMakeZip() { doTestModded ("makeZip"); }
+    @Test public void testDecompileModdedRuby() { doTestModded("decompileRuby", "clean", "downloadModLoader", "decompile", "runClient", "makeDiffPatches", "makeZip"); }
 
     /**
      * Runs a test.
      * @param args Gradle args, including tasks being run.
      */
-    public void doTest(String... args) {
+    public void doTest(String name, String... args) {
+        System.out.println("Running test " + name);
         for (String arg : args) {
             BuildResult result = GradleRunner.create()
                     .withProjectDir(testDir)
@@ -86,17 +82,19 @@ public class ACPWorkspaceTest {
             if (!arg.contains("--")) { // filter out double-dash arg prefix (e.g. --stacktrace)
                 List<TaskOutcome> outcomes = Arrays.asList(SUCCESS, UP_TO_DATE);
                 assertTrue(outcomes.stream().anyMatch(outcome -> outcome == result.task(":" + arg).getOutcome()));
+                System.out.println("> Task " + arg + " successful");
             }
         }
+        System.out.println("Test " + name + " successful");
     }
 
     /**
      * Same as above, but injects a test ruby mod into the source path after the test.
      * @param args Gradle args, including tasks being run.
      */
-    public void doTestModded(String... args) {
+    public void doTestModded(String name, String... args) {
         try {
-            doTest(args);
+            doTest(name, args);
             injectRubyTestMod();
         } catch (IOException e) {
             e.printStackTrace();

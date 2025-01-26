@@ -50,7 +50,7 @@ public abstract class InjectModPatches extends DefaultTask {
             File currIn = getCurrentInput(input, files, lzma);
             File currOut = getCurrentOutput(output, files, lzma);
             project.javaexec(action -> {
-                Configuration binpatcher = project.getConfigurations().getByName("binpatcher");
+                Configuration binpatcher = project.getConfigurations().getByName("binpatch");
                 action.getMainClass().set("net.neoforged.binarypatcher.ConsoleTool");
                 action.setClasspath(project.files(binpatcher));
                 action.args("--clean", currIn.getAbsolutePath(), "--apply", lzma.getAbsolutePath(), "--output", currOut.getAbsolutePath(), "--unpatched");

@@ -35,7 +35,7 @@ public class ModToolsPlugin implements Plugin<Project> {
         TaskProvider<Copy> extractReobfClasses = project.getTasks().register("extractReobfClasses", Copy.class);
         TaskProvider<MakeZip> makeZip = project.getTasks().register("makeZip", MakeZip.class);
 
-        Configuration diffpatch = project.getConfigurations().create("diffpatch");
+        Configuration diffpatch = project.getConfigurations().getByName("diffpatch");
         Configuration specialsource = project.getConfigurations().create("specialsource");
 
         project.afterEvaluate(proj -> {

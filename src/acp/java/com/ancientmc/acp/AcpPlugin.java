@@ -1,6 +1,6 @@
 package com.ancientmc.acp;
 
-import com.ancientmc.acp.init.ACPInitialization;
+import com.ancientmc.acp.init.AcpInitializer;
 import com.ancientmc.acp.tasks.MakeHashes;
 import com.ancientmc.acp.tasks.InjectModPatches;
 import com.ancientmc.acp.tasks.RepackageDefaults;
@@ -49,10 +49,11 @@ public class AcpPlugin implements Plugin<Project> {
         Configuration forgeart = project.getConfigurations().create("forgeart");
         Configuration fernflower = project.getConfigurations().create("fernflower");
         Configuration diffpatch = project.getConfigurations().create("diffpatch");
+        Configuration binpatch = project.getConfigurations().create("binpatch");
 
         project.afterEvaluate(proj -> {
             try {
-                ACPInitialization.init(proj, extension, minecraftVersion);
+                AcpInitializer.init(proj, extension, minecraftVersion);
             } catch (IOException e) {
                 e.printStackTrace();
             }
