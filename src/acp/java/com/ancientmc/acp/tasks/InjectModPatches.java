@@ -8,7 +8,10 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.RegularFileProperty;
-import org.gradle.api.tasks.*;
+import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.OutputFile;
+import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,16 +49,19 @@ public abstract class InjectModPatches extends DefaultTask {
     public void run(File input, File dir, File output) throws IOException {
         Project project = getProject();
         List<File> files = getFiles(dir);
+
         files.forEach(lzma -> {
             File currIn = getCurrentInput(input, files, lzma);
             File currOut = getCurrentOutput(output, files, lzma);
+
             project.javaexec(action -> {
-                Configuration binpatcher = project.getConfigurations().getByName("binpatch");
+                Configuration binpatch = project.getConfigurations().getByName("binpatch");
                 action.getMainClass().set("net.neoforged.binarypatcher.ConsoleTool");
-                action.setClasspath(project.files(binpatcher));
+                action.setClasspath(project.files(binpatch));
                 action.args("--clean", currIn.getAbsolutePath(), "--apply", lzma.getAbsolutePath(), "--output", currOut.getAbsolutePath(), "--unpatched");
             });
         });
+
         FileUtils.deleteDirectory(project.file(Paths.DIR_TEMP + "modjars/"));
     }
 

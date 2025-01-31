@@ -1,12 +1,15 @@
 package com.ancientmc.acp.util;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.neoforged.srgutils.IMappingFile;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+import org.apache.commons.io.IOUtils;
 import org.gradle.internal.os.OperatingSystem;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Collection;
@@ -53,27 +56,54 @@ public class Util {
     }
 
     /**
+     * Quick method that compresses multiple files into both a ZIP and TAR
+     * @param files The files.
+     * @param directory The output directory.
+     * @throws IOException
+     */
+    public static void compress(Collection<File> files, File directory) throws IOException {
+        String archive = directory.getName();
+        Util.compressZip(files, new File(directory, archive + ".zip"));
+        Util.compressTar(files, new File(directory, archive + ".tar.gz"));
+    }
+
+    /**
      * Simple compression function for multiple files.
      * @param files The files.
      * @param zip The output ZIP.
      * @throws IOException
      */
     public static void compressZip(Collection<File> files, File zip) throws IOException {
-        ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zip));
+        ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(zip.toPath()));
 
         for (File file : files) {
             zipOut.putNextEntry(new ZipEntry(file.getName()));
             FileInputStream in = new FileInputStream(file);
-            int len;
-            byte[] b = new byte[4096];
-
-            while ((len = in.read(b)) > 0) {
-                zipOut.write(b, 0, len);
-            }
+            IOUtils.copy(in, zipOut);
             zipOut.closeEntry();
-            in.close();
         }
         zipOut.close();
+    }
+
+    /**
+     * Simple compression function for multiple files.
+     * @param files The files.
+     * @param tar The output TAR GZIP.
+     * @throws IOException
+     */
+    public static void compressTar(Collection<File> files, File tar) throws IOException {
+        GzipCompressorOutputStream gzipOut = new GzipCompressorOutputStream(Files.newOutputStream(tar.toPath()));
+        TarArchiveOutputStream tarOut = new TarArchiveOutputStream(gzipOut);
+
+        for (File file : files) {
+            tarOut.putArchiveEntry(new TarArchiveEntry(file, file.getName()));
+            FileInputStream in = new FileInputStream(file);
+            IOUtils.copy(in, tarOut);
+            tarOut.closeArchiveEntry();
+        }
+        tarOut.finish();
+        tarOut.close();
+        gzipOut.close();
     }
 
     /**

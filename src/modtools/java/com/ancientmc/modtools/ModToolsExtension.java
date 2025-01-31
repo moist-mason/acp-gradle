@@ -2,7 +2,6 @@ package com.ancientmc.modtools;
 
 import org.gradle.api.Project;
 import org.gradle.api.provider.Property;
-import org.gradle.api.tasks.Optional;
 
 public class ModToolsExtension {
     protected final Project project;
@@ -28,4 +27,5 @@ public class ModToolsExtension {
     public Property<String> getModName() {
         return modName;
     }
+
 }

@@ -14,7 +14,7 @@ plugins {
     id 'maven-publish'
 }
 
-group 'com.ancientmc.acp'
+group 'com.ancientmc'
 version '0.2.0.' + new Date().format('yyyyMMdd.HHmmss') + '-BETA'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
@@ -48,6 +48,7 @@ dependencies {
     acpImplementation 'com.google.code.gson:gson:2.11.0'
     acpImplementation 'commons-io:commons-io:2.18.0'
     acpImplementation 'net.neoforged:srgutils:1.0.9'
+    acpImplementation 'org.apache.commons:commons-compress:1.27.1'
 
     modtoolsImplementation sourceSets.acp.output
 
@@ -92,7 +93,7 @@ task testJar(type: Copy, dependsOn: jar) {
 test {
     dependsOn(':testJar')
     useJUnitPlatform()
-    filter { includeTestsMatching "*testDecompileAll" }
+    filter { includeTestsMatching "*testDecompileRuby" }
 }
 
 publishing {

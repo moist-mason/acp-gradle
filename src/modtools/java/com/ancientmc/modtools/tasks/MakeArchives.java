@@ -5,27 +5,34 @@ import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.RegularFileProperty;
-import org.gradle.api.tasks.*;
+import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public abstract class MakeZip extends DefaultTask {
+/**
+ * Makes two archives (ZIP and TAR) of mod classes and/or modified Minecraft classes for distribution.
+ */
+public abstract class MakeArchives extends DefaultTask {
     @TaskAction
     public void exec() {
-        // TODO: simplify inputs somehow? Five is a lot.
-        File originalHash = getOriginalHash().get().getAsFile();
-        File moddedHash = getModdedHash().get().getAsFile();
+        File hashDirectory = getHashDirectory().get().getAsFile();
         File srg = getSrg().get().getAsFile();
         File obfDirectory = getObfuscatedClassDirectory().get().getAsFile();
-        File zip = getZip().get().getAsFile();
+        File archiveDirectory = getArchiveDirectory().get().getAsFile();
 
         try {
             // Retrieve hash maps.
-            Map<String, String> originalMap = getHashMap(originalHash);
-            Map<String, String> moddedMap = getHashMap(moddedHash);
+            Map<String, String> originalMap = getHashMap(new File(hashDirectory, "original.md5"));
+            Map<String, String> moddedMap = getHashMap(new File(hashDirectory, "modded.md5"));
             Map<String, String> classMap = Util.getClassMap(srg);
 
             // Remove ACP start class from map.
@@ -43,7 +50,7 @@ public abstract class MakeZip extends DefaultTask {
                 }
             });
 
-            Util.compressZip(moddedClasses, zip);
+            Util.compress(moddedClasses, archiveDirectory);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,15 +84,12 @@ public abstract class MakeZip extends DefaultTask {
     @InputDirectory
     public abstract DirectoryProperty getObfuscatedClassDirectory();
 
-    @InputFile
-    public abstract RegularFileProperty getOriginalHash();
-
-    @InputFile
-    public abstract RegularFileProperty getModdedHash();
+    @InputDirectory
+    public abstract DirectoryProperty getHashDirectory();
 
     @InputFile
     public abstract RegularFileProperty getSrg();
 
-    @OutputFile
-    public abstract RegularFileProperty getZip();
+    @OutputDirectory
+    public abstract DirectoryProperty getArchiveDirectory();
 }

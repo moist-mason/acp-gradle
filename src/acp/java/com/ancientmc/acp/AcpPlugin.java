@@ -1,11 +1,12 @@
 package com.ancientmc.acp;
 
 import com.ancientmc.acp.init.AcpInitializer;
-import com.ancientmc.acp.tasks.MakeHashes;
 import com.ancientmc.acp.tasks.InjectModPatches;
+import com.ancientmc.acp.tasks.MakeHashes;
 import com.ancientmc.acp.tasks.RepackageDefaults;
 import com.ancientmc.acp.util.Paths;
-import org.gradle.api.*;
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.plugins.JavaPlugin;
@@ -79,9 +80,9 @@ public class AcpPlugin implements Plugin<Project> {
             task.getLogging().captureStandardOutput(LogLevel.DEBUG);
         });
 
-        boolean vanilla = !modPatches.exists();
-        String toInject = (vanilla ? Paths.SLIM_JAR : Paths.MODLOADER_JAR);
-        String dependent = (vanilla ? "stripJar" : "injectModPatches");
+        boolean vanilla = !modPatches.exists(); // has the downloadModLoader task been run (and thus the modpatches dir created)? If not, assume vanilla workspace
+        String toInject = (vanilla ? Paths.SLIM_JAR : Paths.MODLOADER_JAR); // the JAR path to inject with MCInjector, depending on the vanilla status
+        String dependent = (vanilla ? "stripJar" : "injectModPatches"); // the task to run before the MCInject task, depending on the vanilla status.
 
         mcinject.configure(task -> {
             task.setGroup("decompile");

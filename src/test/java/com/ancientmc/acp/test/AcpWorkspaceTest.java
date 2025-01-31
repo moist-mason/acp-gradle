@@ -49,11 +49,14 @@ public class AcpWorkspaceTest {
         FileUtils.forceMkdir(new File(testDir, "src/main/resources"));
     }
 
-    /** Runs all tests. **/
+    /** Runs all tests. The test will pause when Minecraft is running and only continue until after it's closed.
+     * We only need to worry about the "runRuby" test, to ensure our ruby mod's additions are getting registered properly.
+     * Otherwise, just close the game after it launches.
+     **/
     @Test public void testDecompileAll() {
         testDecompile();
         testDecompileModdedClean();
-        testDecompileModdedRuby();
+        testDecompileRuby();
     }
 
     /** Sets up a vanilla ACP workspace. The "modpatches" folder must be deleted before this can be run.**/
@@ -62,8 +65,13 @@ public class AcpWorkspaceTest {
     /** Sets up an ACP workspace with the modloader injected, but with no additional mods installed. **/
     @Test public void testDecompileModdedClean() { doTest("decompileModded", "clean", "downloadModLoader", "decompile", "runClient"); }
 
-    /** Sets up an ACP workspace with the modloader injected, as well as the test ruby mod copied to the source path. **/
-    @Test public void testDecompileModdedRuby() { doTestModded("decompileRuby", "clean", "downloadModLoader", "decompile", "runClient", "makeDiffPatches", "makeZip"); }
+    /** Sets up an ACP workspace with the modloader injected, as well as the test ruby mod copied to the source path.
+     * Runs the game and also exports patches and archives. **/
+    @Test public void testDecompileRuby() {
+        doTestRuby("decompileRuby", "clean", "downloadModLoader", "decompile");
+        doTest("runRuby", "runClient");
+        doTest("exportRuby", "makeDiffPatches", "makeArchives");
+    }
 
     /**
      * Runs a test.
@@ -92,10 +100,11 @@ public class AcpWorkspaceTest {
      * Same as above, but injects a test ruby mod into the source path after the test.
      * @param args Gradle args, including tasks being run.
      */
-    public void doTestModded(String name, String... args) {
+    public void doTestRuby(String name, String... args) {
         try {
             doTest(name, args);
             injectRubyTestMod();
+            System.out.println("Ruby mod injection successful");
         } catch (IOException e) {
             e.printStackTrace();
         }

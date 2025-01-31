@@ -54,12 +54,12 @@ public class AcpInitializer {
                 .setMessage("Downloading version JSON");
         downloadJson.exec(logger, !downloadJson.getOutput().exists());
 
-        Step downloadLibraries = new DownloadLibrariesStep()
+        Step downloadLibraries = new ResolveLibrariesStep()
                 .setLibraries(Json.getLibraries(Arrays.asList(downloadJson.getOutput(), project.file(Paths.DIR_CFG + "jardep.json"))))
                 .setProject(project);
         downloadLibraries.exec();
 
-        Step downloadToolsStep = new DownloadToolsStep()
+        Step downloadToolsStep = new ResolveToolsStep()
                 .setProject(project)
                 .setProperties(project.file("gradle.properties"));
         downloadToolsStep.exec();

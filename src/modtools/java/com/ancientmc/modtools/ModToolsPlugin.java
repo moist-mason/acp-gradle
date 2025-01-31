@@ -3,8 +3,8 @@ package com.ancientmc.modtools;
 import com.ancientmc.acp.tasks.MakeHashes;
 import com.ancientmc.acp.util.Paths;
 import com.ancientmc.modtools.tasks.DownloadModLoader;
+import com.ancientmc.modtools.tasks.MakeArchives;
 import com.ancientmc.modtools.tasks.MakeReobfSrg;
-import com.ancientmc.modtools.tasks.MakeZip;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -33,7 +33,7 @@ public class ModToolsPlugin implements Plugin<Project> {
         TaskProvider<MakeReobfSrg> makeReobfSrg = project.getTasks().register("makeReobfSrg", MakeReobfSrg.class);
         TaskProvider<JavaExec> reobfJar = project.getTasks().register("reobfJar", JavaExec.class);
         TaskProvider<Copy> extractReobfClasses = project.getTasks().register("extractReobfClasses", Copy.class);
-        TaskProvider<MakeZip> makeZip = project.getTasks().register("makeZip", MakeZip.class);
+        TaskProvider<MakeArchives> makeArchives = project.getTasks().register("makeArchives", MakeArchives.class);
 
         Configuration diffpatch = project.getConfigurations().getByName("diffpatch");
         Configuration specialsource = project.getConfigurations().create("specialsource");
@@ -96,15 +96,14 @@ public class ModToolsPlugin implements Plugin<Project> {
             task.getOutput().set(new File("build/modding/hashes/modded.md5"));
         });
 
-        makeZip.configure(task -> {
+        makeArchives.configure(task -> {
             String name = extension.getModName().get();
             task.setGroup("modtools");
             task.dependsOn(makeModdedHashes);
             task.getObfuscatedClassDirectory().set(project.file(Paths.DIR_REOBF_CLASSES));
-            task.getOriginalHash().set(project.file("build/modding/hashes/original.md5"));
-            task.getModdedHash().set(project.file("build/modding/hashes/modded.md5"));
+            task.getHashDirectory().set(project.file("build/modding/hashes/"));
             task.getSrg().set(project.file(Paths.SRG));
-            task.getZip().set(project.file("build/modding/zip/" + name + ".zip"));
+            task.getArchiveDirectory().set(project.file("build/modding/archives/" + name + "/"));
         });
     }
 }
